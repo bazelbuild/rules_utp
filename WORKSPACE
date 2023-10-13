@@ -1,6 +1,12 @@
 workspace(name = "rules_utp")
 
+load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 load(":android_sdk_supplemental_repository.bzl", "android_sdk_supplemental_repository")
+
+maybe(
+    android_sdk_repository,
+    name = "androidsdk",
+)
 
 load("prereqs.bzl", "rules_utp_prereqs")
 rules_utp_prereqs()
