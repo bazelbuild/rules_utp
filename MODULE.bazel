@@ -1,0 +1,40 @@
+module(
+    name = "rules_utp",
+    version = "0.0.1",
+)
+
+bazel_dep(name = "rules_jvm_external", version = "5.3")
+bazel_dep(name = "bazel_skylib", version = "1.0.3")
+bazel_dep(name = "rules_java", version = "7.0.6")
+bazel_dep(name = "rules_license", version = "0.0.7")
+bazel_dep(
+    name = "rules_android",
+    version = "0.1.1",
+)
+
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+maven.install(
+    name = "maven",
+    # To generate the maven lockfile, run this command:
+    # bazel run --noenable_bzlmod @maven//:pin
+    lock_file = "@//:maven_install.json",
+    repositories = [
+        "https://maven.google.com",
+        "https://repo1.maven.org/maven2",
+    ],
+)
+use_repo(
+    maven,
+    "maven",
+)
+
+# rules_android v0.1.1 was release over an year ago. Use commit until 
+# rules_android become stable and has regular releases
+RULES_ANDROID_COMMIT = "0820235adbb156e345138327d88ae9bc697fd74f"
+RULES_ANDROID_SHA = "/U4sNrlpxyaQ6cbzQJ8eypMC6udLStuSnDuErHO8GBs="
+archive_override(
+  module_name = "rules_android",
+  urls = ["https://github.com/bazelbuild/rules_android/archive/%s.zip" % RULES_ANDROID_COMMIT],
+  integrity = "sha256-%s" % RULES_ANDROID_SHA,
+  strip_prefix = "rules_android-%s" % RULES_ANDROID_COMMIT
+)

@@ -38,3 +38,12 @@ def rules_utp_prereqs():
         sha256 = RULES_JVM_EXTERNAL_SHA,
         url = "https://github.com/bazelbuild/rules_jvm_external/releases/download/%s/rules_jvm_external-%s.tar.gz" % (RULES_JVM_EXTERNAL_TAG, RULES_JVM_EXTERNAL_TAG),
     )
+
+    RULES_ANDROID_COMMIT = "0820235adbb156e345138327d88ae9bc697fd74f"
+    RULES_ANDROID_SHA = "fd4e2c36b969c72690e9c6f3409f1eca9302eae74b4adb929c3b84ac73bc181b"
+    http_archive(
+        name = "rules_android",
+        url = "https://github.com/bazelbuild/rules_android/archive/%s.zip" % RULES_ANDROID_COMMIT,
+        sha256 = RULES_ANDROID_SHA,
+        strip_prefix = "rules_android-%s" % RULES_ANDROID_COMMIT,
+    )

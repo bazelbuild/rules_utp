@@ -15,13 +15,16 @@
 """Workspace setup macro for ......"""
 
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+load("@rules_android//:defs.bzl", "rules_android_workspace")
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 
 def rules_utp_workspace():
     """ Sets up workspace dependencies for rules_android."""
     bazel_skylib_workspace()
 
-    UTP_VERSION = "0.0.8-alpha08"
+    UTP_VERSION = "0.0.9-alpha01"
+
+    # Run bazel run --noenable_bzlmod @maven//:pin to generate maven_install.json used in bzlmod mode
     maven_install(
         name = "maven",
         artifacts = [
@@ -34,4 +37,9 @@ def rules_utp_workspace():
             "https://maven.google.com",
             "https://repo1.maven.org/maven2",
         ],
+    )
+    rules_android_workspace()
+    native.register_toolchains(
+        "@rules_android//toolchains/android:android_default_toolchain",
+        "@rules_android//toolchains/android_sdk:android_sdk_tools",
     )
