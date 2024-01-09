@@ -80,11 +80,11 @@ sed -r \
 %extra_setup_commands%
 
 echo exec %java% ${JVM_FLAGS} %jvm_flags% \
-  -classpath %launcher_jar% \
+  -classpath %launcher_classpath% \
   com.google.testing.platform.launcher.Launcher \
   %main_jar% --textProtoConfig=${RUNNER_CONFIG}
 
 exec %java% ${JVM_FLAGS} %jvm_flags% \
-  -classpath %launcher_jar% \
+  -classpath %launcher_classpath% \
   com.google.testing.platform.launcher.Launcher \
   %main_jar% --textProtoConfig=${RUNNER_CONFIG}

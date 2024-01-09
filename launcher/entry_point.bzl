@@ -1,4 +1,4 @@
-# Copyright 2023 The Bazel Authors. All rights reserved.
+# Copyright 2024 The Bazel Authors. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,10 +24,10 @@ visibility([
 UTPEntryPointInfo = provider(
     doc = "Details of a UTP entry point.",
     fields = {
-        "java": "Path to the Java binary.",
-        "launcher": "Launcher deploy jar.",
-        "main": "Main deploy jar.",
-        "data": "Dependencies (as a list of Targets).",
+        "java": "(str) Path to the Java binary.",
+        "launcher": "(File) Launcher deploy jar.",
+        "main": "(File) Main deploy jar.",
+        "data": "([Target]) Dependencies.",
     },
 )
 
@@ -47,7 +47,7 @@ def _utp_entry_point_impl(ctx):
                 ],
                 transitive = [
                     ctx.attr._jvm[java_common.JavaRuntimeInfo].files,
-                ],
+                ] + [x.files for x in ctx.attr.data],
             ),
         ),
     ]
@@ -71,3 +71,14 @@ utp_entry_point = rule(
         converter_args = attr.string_list(),
     ),
 )
+
+def launcher_classpath(entry_point):
+    """Calculates the launcher classpath.
+
+    Args:
+        entry_point: (UTPEntryPointInfo) The entry point.
+
+    Result:
+        (str) Argument suitable for "java -jar".
+    """
+    return entry_point.launcher.short_path,

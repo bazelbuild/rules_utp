@@ -21,7 +21,7 @@
 load("//provider:provider.bzl", "utp_provider", "utp_provider_tools")
 load("@rules_android//rules:rules.bzl", "AndroidAppsInfo", "StarlarkApkInfo", "instrumented_app_info_aspect")
 load(":artifact.bzl", "UTPArtifactInfo", "UTPArtifactsInfo", "apk_to_installable", "artifact_to_message", "data_to_dep")
-load(":entry_point.bzl", "UTPEntryPointInfo")
+load(":entry_point.bzl", "UTPEntryPointInfo", "launcher_classpath")
 load(":environment.bzl", "EnvironmentInfo", "environment_to_message")
 load(":extension.bzl", "extension_config_proto", "extension_direct_deps", "extension_to_proto", "extension_transitive_deps")
 load(":primitives.bzl", "environment_variable")
@@ -269,7 +269,7 @@ def _utp_test_impl(ctx):
         output = launcher,
         substitutions = {
             "%java%": ctx.attr.entry_point[UTPEntryPointInfo].java,
-            "%launcher_jar%": ctx.attr.entry_point[UTPEntryPointInfo].launcher.short_path,
+            "%launcher_classpath%": launcher_classpath(ctx.attr.entry_point[UTPEntryPointInfo]),
             "%main_jar%": ctx.attr.entry_point[UTPEntryPointInfo].main.short_path,
             "%runner_config%": config.path,
             "%runner_config_dirname%": config.dirname,
