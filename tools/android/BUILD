@@ -9,7 +9,7 @@ package(
 
 alias(
     name = "adb",
-    actual = "@androidsdk//:platform-tools/adb",
+    actual = "@androidsdk//:adb",
 )
 
 alias(

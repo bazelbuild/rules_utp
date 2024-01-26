@@ -4,6 +4,13 @@ common --experimental_google_legacy_api
 build --verbose_failures
 build --worker_verbose
 
+# Required by @rules_android
+build --experimental_enable_android_migration_apis
+build --incompatible_java_common_parameters
+build --android_databinding_use_v3_4_args
+build --experimental_android_databinding_v2
+
 # Don't rely on test logs being easily accessible from the test runner,
 # though it makes the log noisier.
 test --test_output=errors
+test --sandbox_debug

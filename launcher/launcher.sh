@@ -34,6 +34,9 @@ SED_SCRIPT=${TEST_TMPDIR}/runner_config.sed
 # enums.
 echo 's#\\*\"@!([^!]+)!@\\*\"#\1#g' > ${SED_SCRIPT}
 
+unset rlocation
+unset is_absolute
+
 # Replace environment variables. Except LD_LIBRARY_PATH, it's huge and makes
 # the script hard to read.
 printenv | \
@@ -75,7 +78,7 @@ sed -r \
 
 # Dump the config with line numbers, to make it easy to diagnose any error
 # messages.
-#cat -n ${RUNNER_CONFIG}
+# cat -n ${RUNNER_CONFIG}
 
 %extra_setup_commands%
 

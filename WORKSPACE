@@ -13,5 +13,6 @@ rules_utp_prereqs()
 load("depprereqs.bzl", "rules_utp_dep_prereqs")
 rules_utp_dep_prereqs()
 
-load("defs.bzl", "rules_utp_workspace")
+load("defs.bzl", "rules_utp_workspace", "rules_utp_test_workspace")
 rules_utp_workspace()
+rules_utp_test_workspace()
