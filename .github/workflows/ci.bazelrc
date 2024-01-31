@@ -1,0 +1,9 @@
+# Required by @rules_android
+common --experimental_google_legacy_api
+
+build --verbose_failures
+build --worker_verbose
+
+# Don't rely on test logs being easily accessible from the test runner,
+# though it makes the log noisier.
+test --test_output=errors

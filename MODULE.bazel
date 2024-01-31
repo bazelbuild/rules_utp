@@ -4,8 +4,8 @@ module(
 )
 
 bazel_dep(name = "rules_jvm_external", version = "5.3")
-bazel_dep(name = "bazel_skylib", version = "1.0.3")
-bazel_dep(name = "rules_java", version = "7.0.6")
+bazel_dep(name = "bazel_skylib", version = "1.4.1")
+bazel_dep(name = "rules_java", version = "7.3.2")
 bazel_dep(name = "rules_license", version = "0.0.7")
 bazel_dep(
     name = "rules_android",
@@ -30,8 +30,8 @@ use_repo(
 
 # rules_android v0.1.1 was release over an year ago. Use commit until 
 # rules_android become stable and has regular releases
-RULES_ANDROID_COMMIT = "0820235adbb156e345138327d88ae9bc697fd74f"
-RULES_ANDROID_SHA = "/U4sNrlpxyaQ6cbzQJ8eypMC6udLStuSnDuErHO8GBs="
+RULES_ANDROID_COMMIT = "f49f2e3af10a32f813ca294a0f025fd27294861a"
+RULES_ANDROID_SHA = "EGpnoftEKL6mc6QfSi7kAGqzhwtY8wsyBl5mAK84AQM="
 archive_override(
   module_name = "rules_android",
   urls = ["https://github.com/bazelbuild/rules_android/archive/%s.zip" % RULES_ANDROID_COMMIT],

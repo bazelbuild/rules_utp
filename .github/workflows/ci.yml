@@ -1,0 +1,66 @@
+name: CI workflow
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+
+concurrency:
+  # Cancel previous actions from the same PR: https://stackoverflow.com/a/72408109
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        bzlmod: [true, false]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: "Checkout the sources"
+        uses: actions/checkout@v4
+
+      - name: "Setup Bazelisk"
+        uses: bazelbuild/setup-bazelisk@v2
+
+      - name: "Install platform-tools"
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install  "platform-tools" &>/dev/null
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses &>/dev/null
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --list_installed
+
+      - name: "Building core"
+        run: |
+          bazel --bazelrc=${{ github.workspace }}/.github/workflows/ci.bazelrc build --enable_bzlmod=${{ matrix.bzlmod }} //launcher/... //tools/... //provider/... 
+
+  tests:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        bzlmod: [true]
+    runs-on: ${{ matrix.os }}
+    needs: build
+    steps:
+      - name: "Checkout the sources"
+        uses: actions/checkout@v4
+
+      - name: "Setup Bazelisk"
+        uses: bazelbuild/setup-bazelisk@v2
+
+      - name: "Running unit tests"
+        run: |
+          bazel --bazelrc=${{ github.workspace }}/.github/workflows/ci.bazelrc test --enable_bzlmod=${{ matrix.bzlmod }} //test/...
