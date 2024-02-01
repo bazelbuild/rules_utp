@@ -19,6 +19,7 @@ Copybara job list:
 - [mirror_gob_to_github](https://copybara.corp.google.com/list-jobs?piperConfigPath=%2F%2Fdepot%2Fgoogle3%2Fthird_party%2Fbazel_rules%2Frules_utp%2Fcopybara%2Fcopy.bara.sky&workflowName=mirror_gob_to_github&refs=)
 - [feedback_gerrit_to_critique](https://copybara.corp.google.com/list-jobs?piperConfigPath=%2F%2Fdepot%2Fgoogle3%2Fthird_party%2Fbazel_rules%2Frules_utp%2Fcopybara%2Fcopy.bara.sky&workflowName=feedback_gerrit_to_critique&refs=)
 
+
 ### Troubleshooting
 
 #### Copybara failed to push to rpc://utp/rules_utp
@@ -41,3 +42,13 @@ Ideally you will only see one new commit in local git directory, comparing to Go
 If the local git history looks good, run the command again without `--dry-run` flag.
 
 Cause of the issue: copybara-worker doesn't have permission to push to GoB's main branch. We have an pending request to GoB team for it: b/318574244.
+
+#### Copybara services are out of date
+
+If the Copybara:ServiceAutoUpdate chip shows up on a CL with a message like "Failed to apply diffs":
+
+You can run following command from piper HEAD to see if copybara-as-service doesn't pick up updated configuration:
+
+`copybara service diffall third_party/bazel_rules/rules_utp/copybara/copy.bara.sky`
+
+Run `copybara service updateall third_party/bazel_rules/rules_utp/copybara/copy.bara.sky` to update all outdated services at once.
