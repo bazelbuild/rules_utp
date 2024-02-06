@@ -9,6 +9,9 @@ local_repository(
 load("@rules_utp//:prereqs.bzl", "rules_utp_prereqs")
 rules_utp_prereqs()
 
+load("@rules_utp//:depprereqs.bzl", "rules_utp_dep_prereqs")
+rules_utp_dep_prereqs()
+
 load("@rules_utp//:defs.bzl", "rules_utp_workspace")
 rules_utp_workspace()
 

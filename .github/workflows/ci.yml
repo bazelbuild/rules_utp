@@ -113,6 +113,7 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           avd-name: android_avd
           disable-animations: true
+          working-directory: ./example/ait
           script: |
             $ANDROID_HOME/platform-tools/adb get-serialno
-            bazel --bazelrc=${{ github.workspace }}/.github/workflows/ci.bazelrc test --enable_bzlmod=${{ matrix.bzlmod }} //example/ait:sample_instrumentation
+            bazel --bazelrc=${{ github.workspace }}/.github/workflows/ci.bazelrc test --enable_bzlmod=${{ matrix.bzlmod }} //:sample_instrumentation

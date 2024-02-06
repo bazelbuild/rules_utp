@@ -1,6 +1,6 @@
 load("@rules_android//rules:rules.bzl", "android_binary", "android_library")
 load(
-    "//launcher:rules.bzl",
+    "@rules_utp//launcher:rules.bzl",
     "android_environment",
     "environment",
     "environment_variable",
@@ -26,7 +26,7 @@ android_instrumentation_test(
 android_binary(
     name = "test_app",
     instruments = ":sample_app",
-    manifest = "//example/ait/lib:AndroidManifest.xml",
+    manifest = "//lib:AndroidManifest.xml",
     multidex = "native",
     deps = [
         ":test_src",
@@ -36,7 +36,7 @@ android_binary(
 
 android_library(
     name = "test_src",
-    srcs = ["//example/ait/lib:SampleTest.java"],
+    srcs = ["//lib:SampleTest.java"],
     deps = [
         ":sample_lib",
         "@bazel_tools//tools/jdk:TestRunner",
@@ -50,7 +50,7 @@ android_library(
 android_binary(
     name = "sample_app",
     custom_package = "com.sample",
-    manifest = "//example/ait/lib:SampleAndroidManifest.xml",
+    manifest = "//lib:SampleAndroidManifest.xml",
     multidex = "native",
     deps = [
         ":sample_lib",
@@ -60,10 +60,10 @@ android_binary(
 
 android_library(
     name = "sample_lib",
-    srcs = ["//example/ait/lib:SampleActivity.java"],
+    srcs = ["//lib:SampleActivity.java"],
     custom_package = "com.sample",
-    manifest = "//example/ait/lib:SampleAndroidManifest.xml",
-    resource_files = ["//example/ait/lib:resource_files"],
+    manifest = "//lib:SampleAndroidManifest.xml",
+    resource_files = ["//lib:resource_files"],
 )
 
 ## instruments
