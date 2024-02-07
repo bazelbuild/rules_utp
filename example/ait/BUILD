@@ -13,7 +13,7 @@ load(":rule.bzl", "android_instrumentation_test")
 
 android_instrumentation_test(
     name = "sample_instrumentation",
-    device_serial = "emulator-5554",
+    device_serial = "emulator-5554", # Default serial-no
     entry_point = ":entry_point",
     environment = ":default_environment",
     instrumentation = ":device_instrumentation",

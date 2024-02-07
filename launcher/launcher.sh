@@ -34,6 +34,10 @@ SED_SCRIPT=${TEST_TMPDIR}/runner_config.sed
 # enums.
 echo 's#\\*\"@!([^!]+)!@\\*\"#\1#g' > ${SED_SCRIPT}
 
+# These functions are created by bazel during test. The grep expressions below
+# don't take care of multi-line functions, hence resulting incorrectly formatted
+# sed expressions if there're multi-line functions in the output of printenv.
+# To keep grep expressions simple, unset these functions in advance.
 unset rlocation
 unset is_absolute
 
