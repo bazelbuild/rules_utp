@@ -112,6 +112,11 @@ def _utp_build_message(ctx):
                 for (nth, f) in enumerate(ctx.attr.test_fixtures)
             ]
         ),
+        cancellation_config = struct(
+            plugin_cleanup_timeout_ms = ctx.attr.plugin_cleanup_timeout_ms,
+            executor_cancellation_timeout_ms = ctx.attr.executor_cancellation_timeout_ms,
+            executor_cancellation_abort_ms = ctx.attr.executor_cancellation_abort_ms,
+        ),
     )
     if not ctx.attr.test_fixtures:
         message["single_device_executor"] = struct(
@@ -412,6 +417,18 @@ utp_test = rule(
         installables = attr.label_list(
             providers = [[UTPArtifactInfo]],
             doc = "android_installable_artifact targets",
+        ),
+        plugin_cleanup_timeout_ms = attr.int(
+            default = 1000,
+            doc = "Time limit to apply to the plugin afterAll phase during cancellation",
+        ),
+        executor_cancellation_timeout_ms = attr.int(
+            default = 3000,
+            doc = "Time limit for test drivers and device providers to clean up gracefully",
+        ),
+        executor_cancellation_abort_ms = attr.int(
+            default = 3000,
+            doc = "Time limit for forcible cleanup after the graceful timeout is exceeded",
         ),
         data = attr.label_list(
             allow_files = True,
