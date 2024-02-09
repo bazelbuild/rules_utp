@@ -19,7 +19,7 @@ load("@rules_android//:defs.bzl", "rules_android_workspace")
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 
 def rules_utp_workspace():
-    """ Sets up workspace dependencies for rules_android."""
+    """ Sets up workspace dependencies for rules_utp."""
     bazel_skylib_workspace()
 
     UTP_VERSION = "0.0.9-alpha01"

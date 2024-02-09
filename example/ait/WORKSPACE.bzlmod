@@ -1,4 +1,4 @@
-workspace(name = "rules_utp")
+workspace(name = "example_ait")
 
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 load("@rules_android//rules:rules.bzl", "android_sdk_repository")

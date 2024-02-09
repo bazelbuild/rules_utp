@@ -17,7 +17,7 @@ maven.install(
     name = "maven",
     # To generate the maven lockfile, run this command:
     # bazel run --noenable_bzlmod @maven//:pin
-    lock_file = "@//:maven_install.json",
+    lock_file = "//:maven_install.json",
     repositories = [
         "https://maven.google.com",
         "https://repo1.maven.org/maven2",
@@ -33,8 +33,8 @@ use_repo(
 RULES_ANDROID_COMMIT = "f49f2e3af10a32f813ca294a0f025fd27294861a"
 RULES_ANDROID_SHA = "EGpnoftEKL6mc6QfSi7kAGqzhwtY8wsyBl5mAK84AQM="
 archive_override(
-  module_name = "rules_android",
-  urls = ["https://github.com/bazelbuild/rules_android/archive/%s.zip" % RULES_ANDROID_COMMIT],
-  integrity = "sha256-%s" % RULES_ANDROID_SHA,
-  strip_prefix = "rules_android-%s" % RULES_ANDROID_COMMIT
+    module_name = "rules_android",
+    urls = ["https://github.com/bazelbuild/rules_android/archive/%s.zip" % RULES_ANDROID_COMMIT],
+    integrity = "sha256-%s" % RULES_ANDROID_SHA,
+    strip_prefix = "rules_android-%s" % RULES_ANDROID_COMMIT
 )

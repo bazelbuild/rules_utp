@@ -64,3 +64,56 @@ jobs:
       - name: "Running unit tests"
         run: |
           bazel --bazelrc=${{ github.workspace }}/.github/workflows/ci.bazelrc test --enable_bzlmod=${{ matrix.bzlmod }} //test/...
+
+  instrumentation-tests:
+    strategy:
+      # Allow tests to continue on other devices if they fail on one device.
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        api-level: [29]
+        bzlmod: [false]
+    runs-on: ${{ matrix.os }}
+    needs: build
+    timeout-minutes: 60
+    steps:
+      - name: "Checkout the sources"
+        uses: actions/checkout@v4
+
+      - name: "Enable KVM"
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: "Init AVD cache"
+        uses: actions/cache@v3
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
+
+      - name: "Create AVD and generate snapshot for caching"
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: "Run instrumentation test"
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          avd-name: android_avd
+          disable-animations: true
+          working-directory: ./example/ait
+          script: |
+            $ANDROID_HOME/platform-tools/adb get-serialno
+            bazel --bazelrc=${{ github.workspace }}/.github/workflows/ci.bazelrc test --enable_bzlmod=${{ matrix.bzlmod }} //:sample_instrumentation

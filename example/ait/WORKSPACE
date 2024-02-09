@@ -1,0 +1,29 @@
+workspace(name = "example_ait")
+
+load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
+
+local_repository(
+    name = "rules_utp",
+    path = "../../",
+)
+load("@rules_utp//:prereqs.bzl", "rules_utp_prereqs")
+rules_utp_prereqs()
+
+load("@rules_utp//:depprereqs.bzl", "rules_utp_dep_prereqs")
+rules_utp_dep_prereqs()
+
+load("@rules_utp//:defs.bzl", "rules_utp_workspace")
+rules_utp_workspace()
+
+load("defs.bzl", "example_workspace")
+example_workspace()
+
+maybe(
+    android_sdk_repository,
+    name = "androidsdk",
+)
+
+
+register_toolchains("@rules_android//toolchains/android:all")
+register_toolchains("@rules_android//toolchains/android_sdk:all")
+register_toolchains("@rules_android//toolchains/emulator:all")

@@ -81,4 +81,4 @@ def launcher_classpath(entry_point):
     Result:
         (str) Argument suitable for "java -jar".
     """
-    return entry_point.launcher.short_path,
+    return entry_point.launcher.short_path

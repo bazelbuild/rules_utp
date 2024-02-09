@@ -1,0 +1,68 @@
+module(
+    name = "example_ait",
+    version = "TODO",
+)
+
+bazel_dep(name = "rules_android", version = "0.1.1")
+bazel_dep(name = "rules_utp", version = "0.0.1")
+bazel_dep(name = "rules_jvm_external", version = "5.3")
+
+
+bazel_dep(name = "rules_java", version = "7.3.2")
+rules_java_toolchains = use_extension("@rules_java//java:extensions.bzl", "toolchains")
+use_repo(rules_java_toolchains, "remote_java_tools")
+bazel_dep(name = "bazel_skylib", version = "1.4.1")
+
+
+UTP_VERSION = "0.0.9-alpha01"
+SERVICES_VERSION = "1.4.2"
+androidxLibVersion = "1.0.0"
+coreVersion = "1.6.0-alpha05"
+extJUnitVersion = "1.2.0-alpha03"
+espressoVersion = "3.6.0-alpha03"
+runnerVersion = "1.6.0-alpha06"
+rulesVersion = "1.6.0-alpha03"
+
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+maven.install(
+    name = "android_maven",
+    artifacts = [
+        "com.android.support:multidex:1.0.3",
+        "com.android.support.test:runner:1.0.2",
+    ],
+    repositories = [
+        "https://maven.google.com",
+        "https://repo1.maven.org/maven2",
+    ],
+)
+maven.install(
+    name = "androidx_maven",
+    artifacts = [
+        "androidx.test:core:" + coreVersion,
+        "androidx.test.espresso:espresso-core:" + espressoVersion,
+        "androidx.test.ext:junit:" + extJUnitVersion,
+        "androidx.test:runner:" + runnerVersion,
+        "androidx.test:rules:" + rulesVersion,
+    ],
+    fetch_sources = True,
+    # To generate the maven lockfile, run this command:
+    # bazel run --noenable_bzlmod @rules_androidx_maven//:pin
+    # lock_file = "//:rules_androidx_maven_install.json",
+    repositories = [
+        "https://maven.google.com",
+        "https://repo1.maven.org/maven2",
+    ],
+)
+use_repo(
+    maven,
+    "android_maven", "androidx_maven"
+)
+
+
+remote_android_extensions = use_extension("@bazel_tools//tools/android:android_extensions.bzl", "remote_android_tools_extensions")
+use_repo(remote_android_extensions, "android_gmaven_r8", "android_tools")
+
+local_path_override(
+    module_name = "rules_utp",
+    path = "../../",
+)
