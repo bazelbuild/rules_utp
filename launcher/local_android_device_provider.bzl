@@ -78,6 +78,7 @@ def _local_android_device_provider_impl(ctx):
             java_class = ctx.attr._class_name,
             binary = deploy,
             config_struct = struct(**configuration),
+            proto_type = ctx.attr._proto_type,
             files = depset(),
         ),
         DefaultInfo(
@@ -90,6 +91,9 @@ local_android_device_provider = rule(
     attrs = dict(
         _class_name = attr.string(
             default = "com.google.testing.platform.runtime.android.provider.local.LocalAndroidDeviceProvider",
+        ),
+        _proto_type = attr.string(
+            default = "google.testing.platform.proto.api.config.LocalAndroidDeviceProvider",
         ),
         utp_release = attr.label(
             default = UTP_RELEASE,

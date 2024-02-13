@@ -22,11 +22,12 @@ UTPExtensionInfo = provider(
         "java_class": "(string) The Extension's Java class.",
         "binary": "(Label) The Java binary to load the Extension from.",
         "text_proto": "(string) The textproto representation of this config.",
+        "proto_type": "(string or None) If specified, the type of the text_proto (protobuf package + name, not Java type name).",
         "files": "(depset) Data dependencies to be made available at runtime. Deprecated; use DefaultInfo instead.",
     },
 )
 
-def utp_extension_info(ctx, extension_rule, java_class, binary, config_struct, files):
+def utp_extension_info(ctx, extension_rule, java_class, binary, config_struct, files, proto_type = None):
     """Wrapper for generating a UTPExtensionInfo provider.
 
     Args:
@@ -36,6 +37,7 @@ def utp_extension_info(ctx, extension_rule, java_class, binary, config_struct, f
         binary: The Java binary to load the Extension from.
         config_struct: Struct representation of the configuration proto for this extension.
         files: (depset) Data dependencies to be made available at runtime.
+        proto_type: (str) The type of the proto represented in config_struct (protobuf package + name, not Java type name).
     Returns:
         A UTPExtensionInfo provider containing information needed to create an extension proto.
     """
@@ -45,10 +47,11 @@ def utp_extension_info(ctx, extension_rule, java_class, binary, config_struct, f
         java_class = java_class,
         binary = binary,
         text_proto = proto.encode_text(config_struct),
+        proto_type = proto_type,
         files = files,
     )
 
-def utp_extension_info_from_textpb(ctx, extension_rule, java_class, binary, text_proto, files):
+def utp_extension_info_from_textpb(ctx, extension_rule, java_class, binary, text_proto, files, proto_type = None):
     """Wrapper for generating a UTPExtensionInfo provider.
 
     Args:
@@ -58,6 +61,7 @@ def utp_extension_info_from_textpb(ctx, extension_rule, java_class, binary, text
         binary: The Java binary to load the Extension from.
         text_proto: The string representation of the configuration proto for this extension.
         files: (depset) Data dependencies to be made available at runtime.
+        proto_type: (str) The type of the proto in text_proto (protobuf package + name, not Java type name).
     Returns:
         A UTPExtensionInfo provider containing information needed to create an extension proto.
     """
@@ -68,5 +72,6 @@ def utp_extension_info_from_textpb(ctx, extension_rule, java_class, binary, text
         java_class = java_class,
         binary = binary,
         text_proto = text_proto.strip(),
+        proto_type = proto_type,
         files = depset([binary], transitive = [files]),
     )

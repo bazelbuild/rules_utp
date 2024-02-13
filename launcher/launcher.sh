@@ -75,10 +75,15 @@ sed -r \
 # not 4.8 from 2020! So use -r instead of -E to indicate extended regexps,
 # and that -z is not available (which is why I used tr to quote newlines
 # above).
+
+# Put the message type in the header of the file, to make it easier for tools
+# that display the textproto to know what they're working with.
+echo '# proto-message: google.testing.platform.proto.api.config.RunnerConfig' \
+  > ${RUNNER_CONFIG}
 sed -r \
   -f ${SED_SCRIPT} \
   ${PWD}/%runner_config_short_path% \
-  > ${RUNNER_CONFIG}
+  >> ${RUNNER_CONFIG}
 
 # Dump the config with line numbers, to make it easy to diagnose any error
 # messages.

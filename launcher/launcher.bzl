@@ -217,15 +217,39 @@ def _utp_test_impl(ctx):
     test_driver_config = ctx.actions.declare_file(ctx.attr.name + "_test_driver_config.proto")
     direct_deps.append(test_driver_config)
     ctx.actions.write(test_driver_config, extension_config_proto(ctx.attr.test_driver))
+    if ctx.attr.test_driver[utp_provider.UTPExtensionInfo].proto_type:
+        # If we know the type of the message, put that in the header to provide a hint for tools
+        # that display the textproto.
+        extra_setup_commands.append(
+            "echo '# proto-message: {}' > {}/test_driver_config.textproto".format(
+                ctx.attr.test_driver[utp_provider.UTPExtensionInfo].proto_type,
+                _UNDECLARED_OUTPUTS,
+            ),
+        )
     extra_setup_commands.append(
-        "{} {} > {}/test_driver_config.proto".format(_SED, test_driver_config.short_path, _UNDECLARED_OUTPUTS),
+        "{} {} >> {}/test_driver_config.textproto".format(
+            _SED,
+            test_driver_config.short_path,
+            _UNDECLARED_OUTPUTS,
+        ),
     )
 
     device_provider_config = ctx.actions.declare_file(ctx.attr.name + "_device_provider_config.proto")
     direct_deps.append(device_provider_config)
     ctx.actions.write(device_provider_config, extension_config_proto(ctx.attr.device_provider))
+    if ctx.attr.device_provider[utp_provider.UTPExtensionInfo].proto_type:
+        extra_setup_commands.append(
+            "echo '# proto-message: {}' > {}/device_provider_config.textproto".format(
+                ctx.attr.device_provider[utp_provider.UTPExtensionInfo].proto_type,
+                _UNDECLARED_OUTPUTS,
+            ),
+        )
     extra_setup_commands.append(
-        "{} {} > {}/device_provider_config.proto".format(_SED, device_provider_config.short_path, _UNDECLARED_OUTPUTS),
+        "{} {} >> {}/device_provider_config.textproto".format(
+            _SED,
+            device_provider_config.short_path,
+            _UNDECLARED_OUTPUTS,
+        ),
     )
 
     for target in [ctx.attr.device_provider] + ctx.attr.test_fixtures:

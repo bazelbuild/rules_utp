@@ -55,6 +55,7 @@ def _android_instrumentation_driver_impl(ctx):
             java_class = ctx.attr._class_name,
             binary = deploy,
             config_struct = struct(**configuration),
+            proto_type = ctx.attr._proto_type,
             files = depset([deploy]),
         ),
     ]
@@ -64,6 +65,9 @@ android_instrumentation_driver = rule(
     attrs = dict(
         _class_name = attr.string(
             default = "com.google.testing.platform.runtime.android.driver.AndroidInstrumentationDriver",
+        ),
+        _proto_type = attr.string(
+            default = "google.testing.platform.proto.api.config.AndroidInstrumentationDriver",
         ),
         utp_release = attr.label(
             default = UTP_RELEASE,
