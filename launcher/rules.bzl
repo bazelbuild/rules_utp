@@ -50,6 +50,11 @@ load(
     _extension_to_proto = "extension_to_proto",
 )
 load(
+    ":features.bzl",
+    _RunnerConfigFeatureProviderInfo = "RunnerConfigFeatureProviderInfo",
+    _runner_config_features = "runner_config_features",
+)
+load(
     ":instrumentation.bzl",
     _InstrumentationArgsInfo = "InstrumentationArgsInfo",
     _InstrumentationFilterInfo = "InstrumentationFilterInfo",
@@ -108,6 +113,7 @@ InstrumentationArgsInfo = _InstrumentationArgsInfo
 InstrumentationFilterInfo = _InstrumentationFilterInfo
 InstrumentationInfo = _InstrumentationInfo
 NO_SHELL_EXECUTION = _NO_SHELL_EXECUTION
+RunnerConfigFeatureProviderInfo = _RunnerConfigFeatureProviderInfo
 STRICT_SHELL_EXECUTION = _STRICT_SHELL_EXECUTION
 TestFixtureInfo = _TestFixtureInfo
 UTPArtifactInfo = _UTPArtifactInfo
@@ -145,6 +151,7 @@ signed_apk = _signed_apk
 ExpansionsInfo = _ExpansionsInfo
 INSTALL_METHOD = _INSTALL_METHOD
 get_mime_type = _get_mime_type
+runner_config_features = _runner_config_features
 test_fixture = _test_fixture
 utp_entry_point = _utp_entry_point
 utp_release = _utp_release

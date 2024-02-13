@@ -24,6 +24,7 @@ load(":artifact.bzl", "UTPArtifactInfo", "UTPArtifactsInfo", "apk_to_installable
 load(":entry_point.bzl", "UTPEntryPointInfo", "launcher_classpath")
 load(":environment.bzl", "EnvironmentInfo", "environment_to_message")
 load(":extension.bzl", "extension_config_proto", "extension_direct_deps", "extension_to_proto", "extension_transitive_deps")
+load(":features.bzl", "RunnerConfigFeatureProviderInfo")
 load(":primitives.bzl", "environment_variable")
 load(
     ":test_fixture.bzl",
@@ -57,6 +58,8 @@ def _utp_build_message(ctx):
         installables.append(apk_to_installable(ctx.attr.test_app))
     installables.extend([apk_to_installable(target) for target in ctx.attr.apks])
     installables.extend([artifact_to_message(target) for target in ctx.attr.installables])
+
+    config_features = ctx.attr._feature_flags[RunnerConfigFeatureProviderInfo]
 
     # Filter out any installables that have no source path, which can happen when there are
     # device fixtures that might or might not have support apps.
@@ -112,12 +115,13 @@ def _utp_build_message(ctx):
                 for (nth, f) in enumerate(ctx.attr.test_fixtures)
             ]
         ),
-        cancellation_config = struct(
+    )
+    if config_features.cancellation_config:
+        message["cancellation_config"] = struct(
             plugin_cleanup_timeout_ms = ctx.attr.plugin_cleanup_timeout_ms,
             executor_cancellation_timeout_ms = ctx.attr.executor_cancellation_timeout_ms,
             executor_cancellation_abort_ms = ctx.attr.executor_cancellation_abort_ms,
-        ),
-    )
+        )
     if not ctx.attr.test_fixtures:
         message["single_device_executor"] = struct(
             device_execution = struct(
@@ -435,6 +439,10 @@ utp_test = rule(
         ),
         logging = attr.string_dict(
             doc = 'Configuration for the Java logger, e.g. {".level": "ALL"}',
+        ),
+        _feature_flags = attr.label(
+            default = "//tools/utp:runner_config_feature",
+            providers = [RunnerConfigFeatureProviderInfo],
         ),
     ),
     toolchains = ["@rules_android//toolchains/android:toolchain_type"],

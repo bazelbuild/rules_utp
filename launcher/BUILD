@@ -79,6 +79,7 @@ bzl_library(
         ":entry_point",
         ":environment",
         ":extension",
+        ":features",
         ":test_fixture",
         ":utilities",
         "//provider",
@@ -128,6 +129,11 @@ bzl_library(
     name = "utilities",
     srcs = ["utilities.bzl"],
     deps = ["@rules_android//rules:rules.bzl"],
+)
+
+bzl_library(
+    name = "features",
+    srcs = ["features.bzl"],
 )
 
 # Make all the rules available in one bundle, for clarity of encapsulation.

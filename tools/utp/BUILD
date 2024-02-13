@@ -1,5 +1,6 @@
 """Bundle of UTP binaries"""
 
+load("//launcher:features.bzl", "runner_config_features")
 load("//launcher:release.bzl", "utp_release")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 
@@ -25,6 +26,11 @@ utp_release(
     launcher = "@maven//:com_google_testing_platform_launcher",
     local_android_device_provider = "@maven//:com_google_testing_platform_android_device_provider_local",
     main = "@maven//:com_google_testing_platform_core",
+)
+
+runner_config_features(
+    name = "runner_config_feature",
+    cancellation_config = False,
 )
 
 bzl_library(
