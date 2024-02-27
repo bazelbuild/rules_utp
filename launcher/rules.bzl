@@ -29,6 +29,7 @@ load(
     _apk_to_installable = "apk_to_installable",
     _artifact_to_message = "artifact_to_message",
     _data_to_dep = "data_to_dep",
+    _file_to_dep = "file_to_dep",
 )
 load(
     ":entry_point.bzl",
@@ -138,6 +139,7 @@ environment_variable = _environment_variable
 environment_variable_direct = _environment_variable_direct
 extension_config_proto = _extension_config_proto
 extension_to_proto = _extension_to_proto
+file_to_dep = _file_to_dep
 path_proto = _path_proto
 any_textproto = _any_textproto
 instrumentation = _instrumentation

@@ -20,7 +20,7 @@
 
 load("//provider:provider.bzl", "utp_provider", "utp_provider_tools")
 load("@rules_android//rules:rules.bzl", "AndroidAppsInfo", "StarlarkApkInfo", "instrumented_app_info_aspect")
-load(":artifact.bzl", "UTPArtifactInfo", "UTPArtifactsInfo", "apk_to_installable", "artifact_to_message", "data_to_dep")
+load(":artifact.bzl", "UTPArtifactInfo", "UTPArtifactsInfo", "apk_to_installable", "artifact_to_message", "data_to_dep", "file_to_dep")
 load(":entry_point.bzl", "UTPEntryPointInfo", "launcher_classpath")
 load(":environment.bzl", "EnvironmentInfo", "environment_to_message")
 load(":extension.bzl", "extension_config_proto", "extension_direct_deps", "extension_to_proto", "extension_transitive_deps")
@@ -78,11 +78,17 @@ def _utp_build_message(ctx):
                 artifact_to_message(a)
                 for a in t[UTPArtifactsInfo].artifacts
             ])
-    if ctx.attr.data:
-        test_fixture_setup["data_dep"].extend([
-            data_to_dep(target)
-            for target in ctx.attr.data
-        ])
+    for target in ctx.attr.data:
+        # The target might be a filegroup, so generate one artifact per file.
+        if len(target.files.to_list()) == 0:
+            pass
+        elif len(target.files.to_list()) > 1:
+            test_fixture_setup["data_dep"].extend([
+                file_to_dep(target, f)
+                for f in target.files.to_list()
+            ])
+        else:
+            test_fixture_setup["data_dep"].append(data_to_dep(target))
     primary_test_fixture = dict(
         test_fixture_id = primary_test_fixture_id,
         setup = struct(**test_fixture_setup),

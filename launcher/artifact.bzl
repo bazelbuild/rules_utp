@@ -93,17 +93,23 @@ def artifact_to_message(target):
 
 def data_to_dep(target):
     """Generates a google.testing.platform.proto.api.core.Artifact for a data dep."""
+    if len(target.files.to_list()) == 0:
+        fail("//{}:{} has no files!".format(target.label.package, target.label.name))
+    return file_to_dep(target, target.files.to_list()[0])
+
+def file_to_dep(target, file):
+    """Generates a google.testing.platform.proto.api.core.Artifact for a file in a target."""
     return struct(
         label = struct(
             label = target.label.name,
             namespace = "//{}".format(target.label.package),
         ),
-        source_path = path_proto(target.files.to_list()[0]),
+        source_path = path_proto(file),
         destination_path = struct(
-            path = "googletest/test_runfiles/google3/{}".format(target.files.to_list()[0].short_path),
+            path = "googletest/test_runfiles/google3/{}".format(file.short_path),
         ),
         type = ARTIFACT_TYPE.TEST_DATA,
-        mime_type = get_mime_type(target.files.to_list()[0]),
+        mime_type = get_mime_type(file),
     )
 
 INSTALL_METHOD = struct(
