@@ -107,7 +107,8 @@ def _test_fixture_impl(ctx):
     if not friendly_name:
         friendly_name = ctx.attr.device_provider.label.name.split("_")[0]
     extension_targets = ctx.attr.host_plugins + [ctx.attr.test_driver, ctx.attr.device_provider]
-    depsets = [x[utp_provider.UTPExtensionInfo].files for x in extension_targets]
+    depsets = ([x[utp_provider.UTPExtensionInfo].files for x in extension_targets] +
+               [depset(direct = [x[UTPArtifactInfo].source_path for x in ctx.attr.installables])])
     runfiles = [x[DefaultInfo].default_runfiles for x in extension_targets]
     providers = []
     if ExpansionsInfo in ctx.attr.device_provider:
