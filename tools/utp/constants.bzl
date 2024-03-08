@@ -16,8 +16,8 @@
 
 visibility(["//test/..."])
 
-JAR_PATH_LOCAL_ANDROID_DEVICE_PROVIDER = "../rules_jvm_external~5.3~maven~maven/com/google/testing/platform/android-device-provider-local/0.0.9-alpha01/processed_android-device-provider-local-0.0.9-alpha01.jar"
-JAR_PATH_ANDROID_INSTRUMENTATION_DRIVER="../rules_jvm_external~5.3~maven~maven/com/google/testing/platform/android-driver-instrumentation/0.0.9-alpha01/processed_android-driver-instrumentation-0.0.9-alpha01.jar"
+JAR_PATH_LOCAL_ANDROID_DEVICE_PROVIDER = "../rules_jvm_external~maven~maven/com/google/testing/platform/android-device-provider-local/0.0.9-alpha01/processed_android-device-provider-local-0.0.9-alpha01.jar"
+JAR_PATH_ANDROID_INSTRUMENTATION_DRIVER="../rules_jvm_external~maven~maven/com/google/testing/platform/android-driver-instrumentation/0.0.9-alpha01/processed_android-driver-instrumentation-0.0.9-alpha01.jar"
 
 TARGET_EMPTY_BINARY = "//test/launcher:empty_java_binary_deploy.jar"
 JAR_PATH_EMPTY_BINARY="test/launcher/empty_java_binary_deploy.jar"
