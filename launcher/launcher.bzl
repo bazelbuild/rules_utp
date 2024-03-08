@@ -333,6 +333,7 @@ def _utp_test_impl(ctx):
         ctx.attr.test_driver,
     ] + ctx.attr.installables
     extensions = [
+        ctx.attr.device_provider,
         ctx.attr.test_driver,
     ] + ctx.attr.host_plugins + ctx.attr.diagnostic_exporters + ctx.attr.test_result_listeners
 
