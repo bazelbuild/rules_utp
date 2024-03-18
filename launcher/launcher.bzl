@@ -212,6 +212,8 @@ def _uuid_command(variable_name):
     return "export {}=`cat /proc/sys/kernel/random/uuid`".format(variable_name)
 
 def _utp_test_impl(ctx):
+    if ctx.attr.args:
+        fail("UTP does not process args. UTP must be configured through Starlark rules.")
     extra_setup_commands = []
     message = _utp_build_message(ctx)
     config = ctx.actions.declare_file(ctx.attr.name + "_runner_config.proto")
