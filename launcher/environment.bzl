@@ -26,17 +26,22 @@ visibility([
     "//test/launcher/...",
 ])
 
-def _android_sdk_to_message(target, dexdump):
+def _android_sdk_to_message(target, dexdump, custom_adb):
     """Generates a google.testing.platform.proto.api.config.AndroidSdk message.
 
     Args:
         target: (Target) AndroidSdkInfo provider.
-        dexdump: (Target) dexdump, since it's not available in the AndroidSdkInfo.
+        dexdump: (File) dexdump, since it's not available in the AndroidSdkInfo.
+        custom_adb: (File) overrides the adb specified in the Android SDK. Can be None
 
     Returns:
         (struct) An AndroidSdk message suitable for proto.encode_text().
     """
     info = target[AndroidSdkInfo]
+    if custom_adb:
+        adb = custom_adb
+    else:
+        adb = info.adb.executable
     return struct(
         sdk_path = struct(
             path = "/".join(
@@ -45,19 +50,20 @@ def _android_sdk_to_message(target, dexdump):
             ),
         ),
         aapt_path = absolute_path_struct(info.aapt2.executable),
-        adb_path = absolute_path_struct(info.adb.executable),
+        adb_path = absolute_path_struct(adb),
         dexdump_path = absolute_path_struct(dexdump),
     )
 
 AndroidEnvironmentInfo = provider(
     doc = "Android-specific environment configuration",
     fields = {
-        "sdk": "Android SDK configuration",
-        "dexdump": "File for the dexdump binary",
-        "test_log_dir": "Relative path to output directory for Android instrumentation logs",
-        "test_run_log": "File name for test run logs",
-        "coverage_report_path": "Path in which Jacoco coverage should be stored",
-        "logcat_options": "Options to pass to logcat when streaming logs",
+        "sdk": "(Target) Android SDK configuration",
+        "custom_adb": "(File) Custom ADB, overriding the one in sdk. Can be None.",
+        "dexdump": "(File) File for the dexdump binary",
+        "test_log_dir": "(str) Relative path to output directory for Android instrumentation logs",
+        "test_run_log": "(str) File name for test run logs",
+        "coverage_report_path": "(str) Path in which Jacoco coverage should be stored",
+        "logcat_options": "([str]) Options to pass to logcat when streaming logs",
     },
 )
 
@@ -72,7 +78,7 @@ def android_environment_to_message(target):
     """
     info = target[AndroidEnvironmentInfo]
     message = dict(
-        android_sdk = _android_sdk_to_message(info.sdk, info.dexdump),
+        android_sdk = _android_sdk_to_message(info.sdk, info.dexdump, info.custom_adb),
         test_log_dir = struct(path = info.test_log_dir),
         test_run_log = struct(path = info.test_run_log),
     )
@@ -87,9 +93,13 @@ def _android_environment_impl(ctx):
         coverage_report_path = environment_variable("JAVA_COVERAGE_FILE")
     else:
         coverage_report_path = ""
+    optional_deps = []
+    if ctx.attr.custom_adb:
+        optional_deps.append(ctx.file.custom_adb)
     return [
         AndroidEnvironmentInfo(
             sdk = ctx.attr._android_sdk,
+            custom_adb = ctx.file.custom_adb,
             dexdump = ctx.file._dexdump,
             test_log_dir = ctx.attr.test_log_dir,
             test_run_log = ctx.attr.test_run_log,
@@ -100,7 +110,7 @@ def _android_environment_impl(ctx):
             ctx.attr._android_sdk[AndroidSdkInfo].aapt2.executable,
             ctx.attr._android_sdk[AndroidSdkInfo].adb.executable,
             ctx.file._dexdump,
-        ])),
+        ] + optional_deps)),
     ]
 
 android_environment = rule(
@@ -117,6 +127,11 @@ android_environment = rule(
         _dexdump = attr.label(
             default = "//tools/android:dexdump",
             allow_single_file = True,
+        ),
+        custom_adb = attr.label(
+            doc = "Custom ADB to use, overriding the one in the Android SDK.",
+            allow_single_file = True,
+            mandatory = False,
         ),
         test_log_dir = attr.string(
             doc = "Relative path to output directory for Android instrumentation logs",
