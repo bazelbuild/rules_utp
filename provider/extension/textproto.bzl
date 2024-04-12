@@ -22,7 +22,9 @@ _TEMPLATE = """label {
   namespace: "%s"
 }
 class_name: "%s"
-%s
+jar {
+  path: "%s"
+}
 resource {
   encoding: TEXT
   raw: '%s'
@@ -46,7 +48,7 @@ def extension_to_textproto(ctx, extension):
         extension.extension_rule,
         extension.extension_target,
         extension.java_class,
-        "\n".join(['jar {{\n  path: "{}"\n}}'.format(x.short_path) for x in extension.binary]),
+        extension.binary.short_path,
         extension.text_proto.replace("\n", "\\n"),
     )
     name = extension.extension_target.split(":")[-1] + "_extension.textproto"

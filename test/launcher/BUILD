@@ -34,11 +34,6 @@ java_binary(
     main_class = "EmptyJava",
 )
 
-java_binary(
-    name = "empty_shared_java_binary_deploy",
-    main_class = "EmptySharedJava",
-)
-
 bzl_library(
     name = "android_instrumentation_driver_test_bzl",
     srcs = ["android_instrumentation_driver_test.bzl"],

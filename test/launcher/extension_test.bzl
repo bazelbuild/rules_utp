@@ -16,13 +16,7 @@
 
 load("//launcher:extension.bzl", "extension_to_proto", "utp_host_plugin")
 load("//provider:provider.bzl", "utp_provider")
-load(
-    "//tools/utp:constants.bzl",
-    "JAR_PATH_EMPTY_BINARY",
-    "JAR_PATH_EMPTY_SHARED_BINARY",
-    "TARGET_EMPTY_BINARY",
-    "TARGET_EMPTY_SHARED_BINARY",
-)
+load("//tools/utp:constants.bzl", "JAR_PATH_EMPTY_BINARY", "TARGET_EMPTY_BINARY")
 load("@bazel_skylib//lib:unittest.bzl", "asserts", "unittest")
 
 def _extension_to_proto_test(ctx):
@@ -45,13 +39,8 @@ def _extension_to_proto_test(ctx):
     )
     asserts.equals(
         env,
-        "@@PWD@@/" + JAR_PATH_EMPTY_SHARED_BINARY,
-        message.jar[0].path,
-    )
-    asserts.equals(
-        env,
         "@@PWD@@/" + JAR_PATH_EMPTY_BINARY,
-        message.jar[1].path,
+        message.jar[0].path,
     )
     return unittest.end(env)
 
@@ -71,7 +60,6 @@ def extension_test_suite(name):
         testonly = True,
         class_name = "com.google.testing.platform.plugin.android.AndroidDevicePlugin",
         binary = TARGET_EMPTY_BINARY,
-        shared_jars = [TARGET_EMPTY_SHARED_BINARY],
     )
 
     unittest.suite(
