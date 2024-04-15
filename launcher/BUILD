@@ -40,6 +40,7 @@ bzl_library(
     srcs = ["entry_point.bzl"],
     deps = [
         ":release",
+        "@rules_java//java/common",
     ],
 )
 
@@ -58,6 +59,7 @@ bzl_library(
         ":primitives",
         ":utilities",
         "//provider",
+        "@rules_java//java/common",
     ],
 )
 
@@ -122,6 +124,7 @@ bzl_library(
     deps = [
         ":utilities",
         "@rules_android//rules:rules.bzl",
+        "@rules_java//java/common",
     ],
 )
 

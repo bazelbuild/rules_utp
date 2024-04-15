@@ -14,6 +14,7 @@
 
 """Generates Extension messages to feed to other rules."""
 
+load("@rules_java//java/common:java_info.bzl", "JavaInfo")
 load("//provider:provider.bzl", "extension", "utp_provider")
 load(":primitives.bzl", "absolute_path_struct", "enum")
 
