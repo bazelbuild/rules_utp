@@ -39,7 +39,7 @@ def extension_to_proto(target):
             label = target.label.name,
         ),
         class_name = info.java_class,
-        jar = [absolute_path_struct(info.binary)],
+        jar = [absolute_path_struct(x) for x in info.binary],
     )
     if info.text_proto != None:
         message["resource"] = struct(
@@ -86,11 +86,12 @@ def extension_direct_deps(target):
         A list of Files.
     """
     if utp_provider.UTPExtensionInfo in target:
-        return [target[utp_provider.UTPExtensionInfo].binary]
+        return target[utp_provider.UTPExtensionInfo].binary
     return []
 
 def _utp_host_plugin_impl(ctx):
-    deploy = ctx.file.binary
+    deploy = [x.files.to_list()[0] for x in ctx.attr.shared_jars] + [ctx.file.binary]
+    deps = depset(direct = [ctx.file.binary], transitive = [x.files for x in ctx.attr.shared_jars])
     return [
         extension.utp_extension_info(
             ctx = ctx,
@@ -98,7 +99,7 @@ def _utp_host_plugin_impl(ctx):
             java_class = ctx.attr.class_name,
             binary = deploy,
             config_struct = struct(),
-            files = depset([deploy]),
+            files = deps,
         ),
     ]
 
@@ -112,6 +113,14 @@ utp_host_plugin = rule(
             mandatory = True,
             providers = [[JavaInfo]],
             allow_single_file = ["_deploy.jar"],
+            # Use the host config so that it builds even with `--config=android_*`.
+            cfg = "exec",
+        ),
+        shared_jars = attr.label_list(
+            doc = "Binary deploy jars shared by this host plugin.",
+            providers = [[JavaInfo]],
+            allow_files = ["_deploy.jar"],
+            cfg = "exec",
         ),
         class_name = attr.string(
             doc = "Class name of the host plugin.",

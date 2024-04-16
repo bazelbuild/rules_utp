@@ -21,3 +21,6 @@ JAR_PATH_ANDROID_INSTRUMENTATION_DRIVER="../rules_jvm_external~~maven~maven/com/
 
 TARGET_EMPTY_BINARY = "//test/launcher:empty_java_binary_deploy.jar"
 JAR_PATH_EMPTY_BINARY="test/launcher/empty_java_binary_deploy.jar"
+
+TARGET_EMPTY_SHARED_BINARY = "//test/launcher:empty_java_shared_binary_deploy.jar"
+JAR_PATH_EMPTY_SHARED_BINARY = "test/launcher/empty_java_shared_binary_deploy.jar"
