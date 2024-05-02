@@ -51,7 +51,10 @@ environment variables).
 
 def _utp_build_message(ctx):
     """Builds a RunnerConfig message (from runner_config.proto)."""
-    primary_device_id = struct(id = environment_variable("DEVICE_UUID"), friendly_name = "primary")
+    primary_device_id = struct(
+        id = environment_variable("DEVICE_UUID"),
+        friendly_name = ctx.attr.device_friendly_name,
+    )
     primary_test_fixture_id = struct(id = environment_variable("TEST_FIXTURE_UUID"))
     installables = []
     if ctx.attr.test_app:
@@ -412,6 +415,10 @@ utp_test = rule(
         device_provider = attr.label(
             providers = [[utp_provider.UTPExtensionInfo]],
             mandatory = True,
+        ),
+        device_friendly_name = attr.string(
+            default = "primary",
+            doc = "Friendly name to use for the primary device in logging",
         ),
         entry_point = attr.label(
             providers = [[UTPEntryPointInfo]],
