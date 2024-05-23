@@ -139,7 +139,8 @@ InstrumentationArgsInfo = provider(
         "enable_debug": "Enable debugging.",
         "no_window_animation": "Disable window animation.",
         "use_test_storage_service": "Add '-e useTestStorageService true' to 'am instrument'.",
-        "args": "Extra options to pass to adb instrument with -e.",
+        "additional_args": "([str]) Add these args directly to 'am instrument'.",
+        "args": "({str:str}) Extra options to pass to am instrument with -e.",
     },
 )
 
@@ -162,6 +163,8 @@ def instrumentation_args_message(target):
             for k, v in info.args.items()
         ],
     )
+    if info.additional_args:
+        message["additional_args"] = info.additional_args
     return struct(**message)
 
 def _instrumentation_args_impl(ctx):
@@ -170,6 +173,7 @@ def _instrumentation_args_impl(ctx):
         no_window_animation = ctx.attr.no_window_animation,
         use_test_storage_service = ctx.attr.use_test_storage_service,
         args = ctx.attr.args,
+        additional_args = ctx.attr.additional_args,
     )]
 
 instrumentation_args = rule(
@@ -189,6 +193,9 @@ instrumentation_args = rule(
         ),
         args = attr.string_dict(
             doc = "Extra instrumentation options to pass with -e.",
+        ),
+        additional_args = attr.string_list(
+            doc = "Add these args directly to `am instrument`.",
         ),
     ),
 )
