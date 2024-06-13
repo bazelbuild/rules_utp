@@ -14,7 +14,7 @@
 
 """Utility functions."""
 
-load("@rules_android//rules:rules.bzl", "StarlarkApkInfo")
+load("//tools/build_defs/android:rules.bzl", "StarlarkApkInfo")
 
 visibility([
     "//launcher/...",

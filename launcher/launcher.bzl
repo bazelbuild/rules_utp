@@ -19,7 +19,7 @@
 # and then use a text_proto_test to validate it.
 
 load("//provider:provider.bzl", "utp_provider", "utp_provider_tools")
-load("@rules_android//rules:rules.bzl", "AndroidAppsInfo", "StarlarkApkInfo", "instrumented_app_info_aspect")
+load("//tools/build_defs/android:rules.bzl", "AndroidAppsInfo", "StarlarkApkInfo", "instrumented_app_info_aspect")
 load(":artifact.bzl", "UTPArtifactInfo", "UTPArtifactsInfo", "apk_to_installable", "artifact_to_message", "data_to_dep", "file_to_dep")
 load(":entry_point.bzl", "UTPEntryPointInfo", "launcher_classpath")
 load(":environment.bzl", "EnvironmentInfo", "environment_to_message")
@@ -485,5 +485,4 @@ utp_test = rule(
             providers = [RunnerConfigFeatureProviderInfo],
         ),
     ),
-    toolchains = ["@rules_android//toolchains/android:toolchain_type"],
 )
