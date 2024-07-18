@@ -49,7 +49,13 @@ def extension_to_textproto(ctx, extension):
         "\n".join(['jar {{\n  path: "{}"\n}}'.format(x.short_path) for x in extension.binary]),
         extension.text_proto.replace("\n", "\\n"),
     )
-    name = extension.extension_target.split(":")[-1] + "_extension.textproto"
+
+    # Make the filename a bit more interesting than the pure target name, without dragging in the
+    # entire target path (which might bump into Bazel or filesystem limits).
+    name = "{}_{}_extension.textproto".format(
+        extension.java_class.split(".")[-1],
+        extension.extension_target.split(":")[-1],
+    )
     file = ctx.actions.declare_file(name)
     ctx.actions.write(
         output = file,
