@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """A UTP launcher that generates the RunnerConfig in Starlark."""
 
 # There appears to be no way in Starlark for a non-test step to have access to the environment

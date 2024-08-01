@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Generates Artifact messages to feed to other rules."""
 
 load("//tools/build_defs/android:rules.bzl", "AndroidAppsInfo")
+load("//tools/build_defs/android/public_api:android_instrumentation_info.bzl", "AndroidInstrumentationInfo")
 load(":mime_types.bzl", "get_mime_type")
 load(":primitives.bzl", "absolute_path_struct", "enum", "path_proto")
 load(":utilities.bzl", "any_textproto", "signed_apk")

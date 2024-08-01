@@ -32,6 +32,8 @@ bzl_library(
         ":primitives",
         ":utilities",
         "//provider",
+        "//tools/build_defs/android:rules_bzl",
+        "//tools/build_defs/android/public_api:android_instrumentation_info_bzl",
     ],
 )
 
@@ -49,6 +51,7 @@ bzl_library(
     srcs = ["environment.bzl"],
     deps = [
         ":primitives",
+        "//tools/build_defs/android/public_api:android_sdk_info_bzl",
     ],
 )
 
@@ -82,9 +85,11 @@ bzl_library(
         ":environment",
         ":extension",
         ":features",
+        ":primitives",
         ":test_fixture",
         ":utilities",
         "//provider",
+        "//tools/build_defs/android/public_api:android_instrumentation_info_bzl",
         "@rules_android//rules:rules.bzl",
     ],
 )
