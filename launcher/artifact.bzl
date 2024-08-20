@@ -13,8 +13,8 @@
 # limitations under the License.
 """Generates Artifact messages to feed to other rules."""
 
-load("//tools/build_defs/android:rules.bzl", "AndroidAppsInfo")
-load("//tools/build_defs/android/public_api:android_instrumentation_info.bzl", "AndroidInstrumentationInfo")
+load("@rules_android//rules:rules.bzl", "AndroidAppsInfo")
+load("@rules_android//rules:providers.bzl", "AndroidInstrumentationInfo")
 load(":mime_types.bzl", "get_mime_type")
 load(":primitives.bzl", "absolute_path_struct", "enum", "path_proto")
 load(":utilities.bzl", "any_textproto", "signed_apk")
