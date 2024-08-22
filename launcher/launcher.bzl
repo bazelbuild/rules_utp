@@ -20,6 +20,7 @@
 load("//provider:provider.bzl", "utp_provider", "utp_provider_tools")
 load("@rules_android//rules:rules.bzl", "AndroidAppsInfo", "StarlarkApkInfo", "instrumented_app_info_aspect")
 load("@rules_android//rules:providers.bzl", "AndroidInstrumentationInfo")
+load("//tools/build_defs/android/public_api:apk_info.bzl", "ApkInfo")
 load(":artifact.bzl", "UTPArtifactInfo", "UTPArtifactsInfo", "apk_to_installable", "artifact_to_message", "data_to_dep", "file_to_dep")
 load(":entry_point.bzl", "UTPEntryPointInfo", "launcher_classpath")
 load(":environment.bzl", "EnvironmentInfo", "environment_to_message")

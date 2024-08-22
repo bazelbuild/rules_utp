@@ -14,6 +14,7 @@
 
 """An example of instrumentation test implemented on utp_test"""
 
+load("@rules_android//rules:providers.bzl", "ApkInfo")
 load(
     "@rules_utp//launcher:rules.bzl",
     "android_instrumentation_driver",
