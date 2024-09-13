@@ -388,6 +388,97 @@ def _utp_test_impl(ctx):
         coverage_common.instrumented_files_info(ctx, dependency_attributes = ["test_app"]),
     ]
 
+_UTP_TEST_ATTRS = dict(
+    _launcher_script = attr.label(
+        default = ":launcher.sh",
+        allow_single_file = True,
+    ),
+    test_app = attr.label(
+        allow_files = False,
+        doc = "The `android_binary` target containing the test classes. " +
+              "The `android_binary` target must specify which target it is testing " +
+              "through its `instruments` attribute.",
+        mandatory = False,
+        aspects = [instrumented_app_info_aspect],
+    ),
+    environment = attr.label(
+        providers = [[EnvironmentInfo]],
+        mandatory = True,
+    ),
+    device_provider = attr.label(
+        providers = [[utp_provider.UTPExtensionInfo]],
+        mandatory = True,
+    ),
+    device_friendly_name = attr.string(
+        default = "primary",
+        doc = "Friendly name to use for the primary device in logging",
+    ),
+    entry_point = attr.label(
+        providers = [[UTPEntryPointInfo]],
+        mandatory = True,
+    ),
+    diagnostic_exporters = attr.label_list(
+        providers = [[utp_provider.UTPExtensionInfo]],
+    ),
+    host_plugins = attr.label_list(
+        providers = [[utp_provider.UTPExtensionInfo]],
+    ),
+    host_plugin_self_ordering = attr.bool(
+        default = True,
+    ),
+    scan_target_package = attr.bool(
+        default = True,
+        doc = "For test discovery: scan the APK under test (the main application)",
+    ),
+    test_result_listeners = attr.label_list(
+        providers = [[utp_provider.UTPExtensionInfo]],
+    ),
+    test_driver = attr.label(
+        providers = [[utp_provider.UTPExtensionInfo]],
+        mandatory = True,
+    ),
+    test_fixtures = attr.label_list(
+        providers = [[TestFixtureInfo]],
+        doc = "Additional test fixtures to run in a multidevice test",
+    ),
+    port_picker = attr.label(
+        providers = [[utp_provider.UTPExtensionInfo]],
+    ),
+    error_config = attr.label_list(
+        providers = [[utp_provider.ErrorMessageUpdaterListInfo]],
+    ),
+    apks = attr.label_list(
+        providers = [[ApkInfo], [StarlarkApkInfo], [AndroidAppsInfo]],
+        doc = "APKs to install (including fixture targets with support_apps)",
+    ),
+    installables = attr.label_list(
+        providers = [[UTPArtifactInfo]],
+        doc = "android_installable_artifact targets",
+    ),
+    plugin_cleanup_timeout_ms = attr.int(
+        default = 1000,
+        doc = "Time limit to apply to the plugin afterAll phase during cancellation",
+    ),
+    executor_cancellation_timeout_ms = attr.int(
+        default = 3000,
+        doc = "Time limit for test drivers and device providers to clean up gracefully",
+    ),
+    executor_cancellation_abort_ms = attr.int(
+        default = 3000,
+        doc = "Time limit for forcible cleanup after the graceful timeout is exceeded",
+    ),
+    data = attr.label_list(
+        allow_files = True,
+    ),
+    logging = attr.string_dict(
+        doc = 'Configuration for the Java logger, e.g. {".level": "ALL"}',
+    ),
+    _feature_flags = attr.label(
+        default = "//tools/utp:runner_config_feature",
+        providers = [RunnerConfigFeatureProviderInfo],
+    ),
+)
+
 # Setting up a utp_test is a job for a macro. There are too many scattered things to deal with,
 # like the fixture scripts being arguments for the DataStagingAndFixtureScriptPlugin. A good
 # macro will minimize the number of build targets created (e.g. create one utp_test per
@@ -396,94 +487,38 @@ utp_test = rule(
     doc = RULE_DOC,
     implementation = _utp_test_impl,
     test = True,
-    attrs = dict(
-        _launcher_script = attr.label(
-            default = ":launcher.sh",
-            allow_single_file = True,
-        ),
-        test_app = attr.label(
-            allow_files = False,
-            doc = "The `android_binary` target containing the test classes. " +
-                  "The `android_binary` target must specify which target it is testing " +
-                  "through its `instruments` attribute.",
-            mandatory = False,
-            aspects = [instrumented_app_info_aspect],
-        ),
-        environment = attr.label(
-            providers = [[EnvironmentInfo]],
-            mandatory = True,
-        ),
-        device_provider = attr.label(
-            providers = [[utp_provider.UTPExtensionInfo]],
-            mandatory = True,
-        ),
-        device_friendly_name = attr.string(
-            default = "primary",
-            doc = "Friendly name to use for the primary device in logging",
-        ),
-        entry_point = attr.label(
-            providers = [[UTPEntryPointInfo]],
-            mandatory = True,
-        ),
-        diagnostic_exporters = attr.label_list(
-            providers = [[utp_provider.UTPExtensionInfo]],
-        ),
-        host_plugins = attr.label_list(
-            providers = [[utp_provider.UTPExtensionInfo]],
-        ),
-        host_plugin_self_ordering = attr.bool(
-            default = True,
-        ),
-        scan_target_package = attr.bool(
-            default = True,
-            doc = "For test discovery: scan the APK under test (the main application)",
-        ),
-        test_result_listeners = attr.label_list(
-            providers = [[utp_provider.UTPExtensionInfo]],
-        ),
-        test_driver = attr.label(
-            providers = [[utp_provider.UTPExtensionInfo]],
-            mandatory = True,
-        ),
-        test_fixtures = attr.label_list(
-            providers = [[TestFixtureInfo]],
-            doc = "Additional test fixtures to run in a multidevice test",
-        ),
-        port_picker = attr.label(
-            providers = [[utp_provider.UTPExtensionInfo]],
-        ),
-        error_config = attr.label_list(
-            providers = [[utp_provider.ErrorMessageUpdaterListInfo]],
-        ),
-        apks = attr.label_list(
-            providers = [[ApkInfo], [StarlarkApkInfo], [AndroidAppsInfo]],
-            doc = "APKs to install (including fixture targets with support_apps)",
-        ),
-        installables = attr.label_list(
-            providers = [[UTPArtifactInfo]],
-            doc = "android_installable_artifact targets",
-        ),
-        plugin_cleanup_timeout_ms = attr.int(
-            default = 1000,
-            doc = "Time limit to apply to the plugin afterAll phase during cancellation",
-        ),
-        executor_cancellation_timeout_ms = attr.int(
-            default = 3000,
-            doc = "Time limit for test drivers and device providers to clean up gracefully",
-        ),
-        executor_cancellation_abort_ms = attr.int(
-            default = 3000,
-            doc = "Time limit for forcible cleanup after the graceful timeout is exceeded",
-        ),
-        data = attr.label_list(
-            allow_files = True,
-        ),
-        logging = attr.string_dict(
-            doc = 'Configuration for the Java logger, e.g. {".level": "ALL"}',
-        ),
-        _feature_flags = attr.label(
-            default = "//tools/utp:runner_config_feature",
-            providers = [RunnerConfigFeatureProviderInfo],
-        ),
-    ),
+    attrs = _UTP_TEST_ATTRS,
 )
+
+# copybara:strip_begin
+
+# Sponge figures out the associated language of a test by looking at the name of the rule, and the
+# type by looking at the suffix. http://yaqs/5839810819839229952 We can't ship this in open source,
+# since Sponge is in google3, but we can provide aliases that do provide the language association
+# that can be used inside google3.
+
+# If you want your test to show up in Sponge with language ANDROID, use this version of the rule.
+android_utp_test = rule(
+    doc = RULE_DOC,
+    implementation = _utp_test_impl,
+    test = True,
+    attrs = _UTP_TEST_ATTRS,
+)
+
+# If you want your test to show up in Sponge with language JAVA, use this version of the rule.
+java_utp_test = rule(
+    doc = RULE_DOC,
+    implementation = _utp_test_impl,
+    test = True,
+    attrs = _UTP_TEST_ATTRS,
+)
+
+# If you want your test to show up in Sponge with language OBJC, use this version of the rule.
+objc_utp_test = rule(
+    doc = RULE_DOC,
+    implementation = _utp_test_impl,
+    test = True,
+    attrs = _UTP_TEST_ATTRS,
+)
+
+# copybara:strip_end

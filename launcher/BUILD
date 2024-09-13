@@ -89,6 +89,7 @@ bzl_library(
         ":test_fixture",
         ":utilities",
         "//provider",
+        "//tools/build_defs/android/public_api:android_instrumentation_info_bzl",
         "//tools/build_defs/android/public_api:apk_info",
         "@rules_android//rules:rules.bzl",
     ],
