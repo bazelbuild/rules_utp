@@ -94,7 +94,7 @@ def _android_environment_impl(ctx):
     optional_deps = []
     if ctx.attr.custom_adb:
         optional_deps.append(ctx.file.custom_adb)
-    android_sdk = ctx.toolchains["//third_party/bazel_rules/rules_android/toolchains/android_sdk:toolchain_type"].android_sdk_info
+    android_sdk = ctx.toolchains["//tools/build_defs/android/release/toolchains/android_sdk:toolchain_type"].android_sdk_info
     return [
         AndroidEnvironmentInfo(
             android_sdk = android_sdk,
@@ -135,7 +135,7 @@ android_environment = rule(
         ),
     ),
     toolchains = [
-        "//third_party/bazel_rules/rules_android/toolchains/android_sdk:toolchain_type",
+        "//tools/build_defs/android/release/toolchains/android_sdk:toolchain_type",
     ],
 )
 
