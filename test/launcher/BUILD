@@ -1,3 +1,4 @@
+load("@rules_java//java:defs.bzl", "java_binary")
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 load(":android_instrumentation_driver_test.bzl", "android_instrumentation_driver_test_suite")
 load(":extension_test.bzl", "extension_test_suite")
