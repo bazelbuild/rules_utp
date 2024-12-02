@@ -45,6 +45,7 @@ def _android_instrumentation_driver_impl(ctx):
         ),
         use_orchestrator = ctx.attr.use_orchestrator,
         shell_execution_option = ctx.attr.shell_execution,
+        use_local_socket_shell_executor = ctx.attr.use_local_socket_shell_executor,
     )
     if ctx.attr.am_instrument_timeout > 0:
         configuration["am_instrument_timeout"] = ctx.attr.am_instrument_timeout
@@ -92,6 +93,10 @@ android_instrumentation_driver = rule(
         shell_execution = attr.string(
             doc = "How to perform shell command execution.",
             default = NO_SHELL_EXECUTION,
+        ),
+        use_local_socket_shell_executor = attr.bool(
+            doc = "Use the LocalSocket shell executor.",
+            default = True,
         ),
     ),
 )

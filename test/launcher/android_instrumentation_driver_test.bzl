@@ -54,6 +54,7 @@ android_instrumentation_runtime {
   }
 }
 shell_execution_option: "@!NO_SHELL_EXECUTION!@"
+use_local_socket_shell_executor: true
 use_orchestrator: true
 """.strip()
 
