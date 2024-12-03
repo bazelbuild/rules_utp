@@ -6,7 +6,6 @@ build --worker_verbose
 
 # Required by @rules_android
 build --experimental_enable_android_migration_apis
-build --incompatible_java_common_parameters
 build --android_databinding_use_v3_4_args
 build --experimental_android_databinding_v2
 
